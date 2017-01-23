@@ -1,0 +1,36 @@
+<script>
+  (function(s,u,r,f,l,y){s[f]=s[f]||{init:function(){s[f].q=arguments}};
+  l=u.createElement(r);y=u.getElementsByTagName(r)[0];l.async=1;
+  l.src='https://surfly.com/surfly.js';y.parentNode.insertBefore(l,y);})
+  (window,document,'script','Surfly');
+
+  var settings = {
+    block_until_agent_joins: false,
+    splash: false
+  };
+
+  Surfly.init({widget_key: '0c17c102b943457a82838fe64a5a0a0d'}, function(init) {
+    if (init.success) {
+      if(Surfly.currentSession){
+        document.getElementById('cancel-session').style.display="block";
+        Surfly.session(settings)
+        .on('viewer_joined', function(session, event) {
+        // if a viewer joins and they are the first then redirect to home page
+          if(event.count == 1){
+            session.relocate("https://example.com");
+          }
+        })
+        .on('session_started', function(session, event) {
+        // display the session-id
+          var showId = document.getElementById("session-id");
+          showId.style.display = "block";
+          showId.textContent = session.pin;
+        }).startLeader();
+      }
+    }
+  });
+
+  function sessionEnd() {
+    Surfly.currentSession.end();
+  }
+</script>
